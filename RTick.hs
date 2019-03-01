@@ -212,7 +212,7 @@ wait x = Tick 1 x
 -- @waitN (n > 0) := step n . return@.
 --
 {-@ reflect waitN @-}
-{-@ waitN :: { n:Nat | n > 0 } -> x:a
+{-@ waitN :: n:Nat -> x:a
     -> { t:Tick a | x == tval t && n == tcost t }
 @-}
 waitN :: Int -> a -> Tick a
