@@ -1,7 +1,6 @@
 
 --
 -- Liquidate your assets: reasoning about resource usage in Liquid Haskell.
--- Martin A.T. Handley, Niki Vazou, and Graham Hutton.
 --
 
 {-@ LIQUID "--reflection" @-}

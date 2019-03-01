@@ -2,8 +2,7 @@
 {- Counters 26/21/21 -}
 
 --
--- Liquidate your assets: reasoning about resource usage in Liquid Haskell.
--- Martin A.T. Handley, Niki Vazou, and Graham Hutton.
+-- Liquidate your assets: reasoning about resource usage in Liquid Haskell.s
 --
 
 {-@ LIQUID "--reflection" @-}
