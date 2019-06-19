@@ -3,11 +3,20 @@ module MapFusion where
 
 import Prelude hiding (mapM, Applicative (..), Monad (..), length)    
 import Data.RTick 
+import Data.Lists 
 import Proof.Combinators 
 import Proof.Quantified 
 {-@ infix   >>= @-}
 {-@ infix   >=> @-}
 {-@ infix   :   @-}
+
+
+
+{-@ reflect mapM @-}
+mapM :: (a -> Tick b) -> [a] -> Tick [b]
+mapM f []     = pure [] 
+mapM f (x:xs) = step 1 (liftA2 cons (f x) (mapM f xs))
+
 
 mapFusion :: Eq c => (a -> Tick b) -> (b -> Tick c) -> [a] -> () 
 {-@ mapFusion :: f:(a -> Tick b) -> g:(b -> Tick c) -> xs:[a] 
@@ -44,19 +53,6 @@ mapFusion f g (x:xs)
     Tick cfgsr fgxsr = mapM (f >=> g) xs
 
 
-{-@ measure length @-}
-length :: [a] -> Int 
-length [] = 0 
-length (x:xs) = 1 + length xs     
 
-{-@ reflect cons @-}
-{-@ cons :: x:a -> xs:[a] -> {z:[a] | z == x:xs} @-}
-cons :: a -> [a] -> [a]
-cons x xs = x:xs
-
-{-@ reflect mapM @-}
-mapM :: (a -> Tick b) -> [a] -> Tick [b]
-mapM f []     = pure [] 
-mapM f (x:xs) = step 1 (liftA2 cons (f x) (mapM f xs))
 
 

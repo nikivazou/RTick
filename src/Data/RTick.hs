@@ -26,6 +26,21 @@ liftA2 f (Tick i x) (Tick j y) = Tick (i+j) (f x y)
 (>>=) :: Tick a -> (a -> Tick b) -> Tick b 
 Tick i x >>= m = let Tick j w = m x in Tick (i + j) w 
 
+{-@ reflect bbind @-}
+{-@ bbind :: n:Int -> mx:Tick a -> m:(a -> {t:Tick b | tcost t <= n }) 
+          -> {t:Tick b | tcost t <= tcost mx + n } @-}
+bbind :: Int -> Tick a -> (a -> Tick b) -> Tick b 
+bbind _ (Tick i x) m = let Tick j w = m x in Tick (i + j) w 
+
+{-@ reflect ebind @-}
+{-@ ebind :: n:Int -> mx:Tick a -> m:(a -> {t:Tick b | tcost t == n }) 
+          -> {t:Tick b | tcost t == tcost mx + n } @-}
+ebind :: Int -> Tick a -> (a -> Tick b) -> Tick b 
+ebind _ (Tick i x) m = let Tick j w = m x in Tick (i + j) w 
+
+
+
+
 {-@ reflect step @-}
 step :: Int -> Tick a -> Tick a 
 step i (Tick j x) = Tick (i+j) x 
