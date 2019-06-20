@@ -36,26 +36,27 @@ mapFusion f g (x:xs)
   =   mapM f (x:xs) >>= mapM g
   <=> (step 1 (liftA2 cons (f x) (mapM f xs))) >>= mapM g
   >== 1 ==>   liftA2 cons (f x) (mapM f xs) >>= mapM g
-  <=> 
-      Tick (cf+cfs) (fx `cons` fxs) >>= mapM g
-  <=> (let Tick cgs (gfx:gfxs)  = mapM g (fx:fxs) in 
-        Tick (cf+cfs+cgs) (gfx:gfxs))
+  >== cf + cfs ==>  
+      pure (fx `cons` fxs) >>= mapM g
+  <=> mapM g (fx:fxs) 
 
-  <=> (let Tick cgs (gfx:gfxs)  = step 1 (liftA2 cons (g fx) (mapM g fxs)) in 
-      Tick (cf+cfs+cgs) (gfx:gfxs))
-
-  <=> step (1+cf+cfs) (liftA2 cons (g fx) (mapM g fxs))
-  <=> step (1+cf) (liftA2 cons (g fx) (mapM f xs >>= mapM g))
+  <=> step 1 (liftA2 cons (g fx) (mapM g fxs))
+  >== 1 ==> 
+      liftA2 cons (g fx) (mapM g fxs)
+  <== cfs ==< 
+      liftA2 cons (g fx) (mapM f xs >>= mapM g)
       ? mapFusion f g xs
   >== length xs ==>  
-      step (1+cf) (liftA2 cons (g fx)   (mapM (f >=> g) xs))
-  <=> step 1 (liftA2 cons ((f >=> g) x) (mapM (f >=> g) xs))      
+      liftA2 cons (g fx) (mapM (f >=> g) xs)
+  <== cf ==< 
+       liftA2 cons ((f >=> g) x) (mapM (f >=> g) xs)      
+  <== 1 ==< 
+      step 1 (liftA2 cons ((f >=> g) x) (mapM (f >=> g) xs))
   <=> mapM (f >=> g) (x:xs) 
   *** QED 
   where
     Tick cf fx     = f x 
     Tick cfs fxs   = mapM f xs   
-    Tick cfgs fgxs = mapM f xs >>= mapM g
 
 
 
