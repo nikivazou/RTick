@@ -47,6 +47,7 @@ module RTick
   , (=\<)     -- step (-1)    . (>>= f)
   , (>\\=)    -- step (-2)    . (>>= f)
   , (=\\<)    -- step (-2)    . (>>= f)
+  , (<$>)     -- fmap, but as infixl  
   -- Memoisation:
   , pay
   , zipWithM
@@ -54,7 +55,7 @@ module RTick
 
   ) where
 
-import Prelude hiding ( Functor(..), Applicative(..), Monad(..), (=<<) )
+import Prelude hiding ( Functor(..), Applicative(..), Monad(..), (=<<), (<$>) )
 
 import qualified Control.Applicative as A
 import qualified Control.Monad       as M
@@ -88,7 +89,6 @@ instance F.Functor Tick where
 fmap :: (a -> b) -> Tick a -> Tick b
 fmap f (Tick m x) = Tick m (f x)
 
-{-@ infixl 4 <$> @-}
 {-@ (<$>) :: f:(a -> b) -> t1:Tick a
     -> { t:Tick b | Tick (tcost t1) (f (tval t1)) == t }
 @-}
