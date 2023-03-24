@@ -88,6 +88,14 @@ instance F.Functor Tick where
 fmap :: (a -> b) -> Tick a -> Tick b
 fmap f (Tick m x) = Tick m (f x)
 
+{-@ infixl 4 <$> @-}
+{-@ (<$>) :: f:(a -> b) -> t1:Tick a
+    -> { t:Tick b | Tick (tcost t1) (f (tval t1)) == t }
+@-}
+infixl 4 <$>
+(<$>) :: (a -> b) -> Tick a -> Tick b
+(<$>) = fmap
+
 instance A.Applicative Tick where
   pure  = pure
   (<*>) = (<*>)
